@@ -9,11 +9,11 @@ import br.edu.ifsuldeminas.sd.chat.ChatException;
 import br.edu.ifsuldeminas.sd.chat.ChatFactory;
 import br.edu.ifsuldeminas.sd.chat.MessageContainer;
 import br.edu.ifsuldeminas.sd.chat.Sender;
-//@Deyvison&Dayane
+
 public class InterfaceGrafica implements MessageContainer {
 
     private JFrame frame;
-    private JTextField textLocal, textRemota, textName, msgText;
+    private JTextField textLocal, textRemota, textName, textServerIp, msgText;
     private JTextArea textRecebimento;
 
     private int localPort, serverPort;
@@ -52,6 +52,10 @@ public class InterfaceGrafica implements MessageContainer {
         JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
         headerPanel.setBackground(new Color(245, 245, 245));  // Cinza Claro
         headerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        headerPanel.add(createLabel("IP:"));
+        textServerIp = createTextField(15);
+        headerPanel.add(textServerIp);
 
         headerPanel.add(createLabel("Porta local:"));
         textLocal = createTextField(6);
@@ -145,10 +149,11 @@ public class InterfaceGrafica implements MessageContainer {
 
     private void btnConfirmarActionPerformed(ActionEvent evt) {
         try {
+            String serverIp = textServerIp.getText();
             localPort = Integer.parseInt(textLocal.getText());
             serverPort = Integer.parseInt(textRemota.getText());
             from = textName.getText();
-            sender = ChatFactory.build("localhost", serverPort, localPort, this);
+            sender = ChatFactory.build(serverIp, serverPort, localPort, this);
             textRecebimento.append("Conectado com sucesso!\n");
         } catch (ChatException | NumberFormatException e) {
             textRecebimento.append("Erro ao conectar: " + e.getMessage() + "\n");
